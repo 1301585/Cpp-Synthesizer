@@ -1,6 +1,6 @@
 #pragma warning(disable:4996)
 #include <iostream>
-
+#include <string.h>
 #include <stdint.h>
 
 
@@ -29,7 +29,7 @@ struct SMinimalWaveFileHeader {
 };
 
 
-bool WriteWaveFile(const char* szFileName, void* pData, int32_t nDataSize, int16_t nNumChannels, int32_t nSampleRate, int32_t nBitsPerSample) {
+bool WriteWaveFile(const char *szFileName, void *pData, int32_t nDataSize, int16_t nNumChannels, int32_t nSampleRate, int32_t nBitsPerSample) {
     //open file
 
     FILE *FILE = fopen(szFileName, "w+b");
@@ -81,15 +81,15 @@ bool WriteWaveFile(const char* szFileName, void* pData, int32_t nDataSize, int16
 
 int main()
 {
-    int nSampleRate = 4400;
+    int nSampleRate = 44100;
     int nNumSeconds = 4;
     int nNumChannels = 2;
 
     int nNumSamples = nSampleRate * nNumChannels * nNumSeconds;
-    uint32_t *pData = new uint32_t[nNumSamples];
+    int32_t *pData = new int32_t[nNumSamples];
 
-    uint32_t nValue1 = 0;
-    uint32_t nValue2 = 0;
+    int32_t nValue1 = 0;
+    int32_t nValue2 = 0;
     for (int nIndex = 0; nIndex < nNumSamples; nIndex += 2) {
         //data wraps around once it gets high enough, making a sawtooth wave
         nValue1 += 8000000;
@@ -98,7 +98,7 @@ int main()
         pData[nIndex + 1] = nValue2; //right channel
     }
 
-    WriteWaveFile("outMono.wav", pData, nNumSamples * sizeof(pData[0]), nNumChannels, nSampleRate, sizeof(pData[0]) * 8);
+    WriteWaveFile("outStereo.wav", pData, nNumSamples * sizeof(pData[0]), nNumChannels, nSampleRate, sizeof(pData[0]) * 8);
 
     delete[]pData;
 
